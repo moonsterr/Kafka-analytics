@@ -21,4 +21,3 @@ VOLUME ["/bitnami/kafka"]
 
 # Start Kafka using Bitnami’s entrypoint
 ENTRYPOINT ["/opt/bitnami/scripts/kafka/entrypoint.sh"]
-CMD ["run"]
