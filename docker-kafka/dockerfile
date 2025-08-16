@@ -1,23 +1,24 @@
-# Use Bitnami Kafka image as base
-FROM bitnami/kafka:latest
+# Use official Confluent Kafka image
+FROM confluentinc/cp-kafka:8.8.2
 
-# Expose ports
+# Expose Kafka ports
 EXPOSE 9092 9093
 
-# Set environment variables for KRaft mode
-ENV KAFKA_ENABLE_KRAFT=yes
-ENV KAFKA_CFG_PROCESS_ROLES=broker,controller
-ENV KAFKA_CFG_NODE_ID=1
-ENV KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
-ENV KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
-ENV KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093
-ENV KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka-analytics.onrender.com:9092
-ENV KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka-analytics.onrender.com:9093
+# Environment variables for KRaft mode
+ENV KAFKA_KRAFT_MODE=true
+ENV KAFKA_BROKER_ID=1
+ENV KAFKA_PROCESS_ROLES=broker,controller
+ENV KAFKA_LISTENERS=PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
+ENV KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka-analytics.onrender.com:9092
+ENV KAFKA_CONTROLLER_QUORUM_VOTERS=1@kafka-analytics.onrender.com:9093
 ENV KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
-ENV ALLOW_PLAINTEXT_LISTENER=yes
+ENV KAFKA_LOG_DIRS=/kafka-logs
 
-# Optional: create a volume for persistence
-VOLUME ["/bitnami/kafka"]
+# Create log directory for persistence
+RUN mkdir -p /kafka-logs
 
-# Start Kafka using Bitnami’s entrypoint
-ENTRYPOINT ["/opt/bitnami/scripts/kafka/entrypoint.sh"]
+# Optional: mount volume for persistent Kafka logs
+VOLUME ["/kafka-logs"]
+
+# Start Kafka
+CMD ["bash", "-c", "/etc/confluent/docker/run"]
