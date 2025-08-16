@@ -20,3 +20,4 @@ ENV ALLOW_PLAINTEXT_LISTENER=yes
 VOLUME ["/bitnami/kafka"]
 
 # Default command to start Kafka
+CMD ["bash", "-c", "/etc/confluent/docker/run & sleep 5 && kafka-topics --bootstrap-server localhost:9092 --list"]
