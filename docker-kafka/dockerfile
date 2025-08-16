@@ -20,5 +20,3 @@ ENV ALLOW_PLAINTEXT_LISTENER=yes
 VOLUME ["/bitnami/kafka"]
 
 # Default command to start Kafka
-CMD ["kafka-server-start.sh", "/opt/bitnami/kafka/config/kraft/server.properties"]
-
